@@ -28,8 +28,8 @@ This is a simple Go API service that provides endpoints to get coin balances for
 1. Clone the repository:
 
     ```sh
-    git clone <repository-url>
-    cd <repository-directory>
+    git clone https://github.com/louremipsum/goapi.git
+    cd goapi
     ```
 
 2. Install dependencies:
@@ -186,13 +186,34 @@ Used by: handlers and middleware
 
 #### Flow Diagram
 
-```flowchart
-Request → chi Router → Authorization Middleware → GetCoinBalance Handler
-                            ↓                            ↓
-                    Database Interface             API Response
-                            ↓
-                        Mock DB
+```mermaid
+graph TD
+    A[Client Request] -->|HTTP GET /account/coins| B[chi Router]
+    B --> C[Authorization Middleware]
+    C -->|Valid Credentials| D[GetCoinBalance Handler]
+    C -->|Invalid Credentials| E[400 Bad Request]
+    D --> F[Database Interface]
+    F --> G[Mock DB]
+    G -->|Retrieve Coin Balance| H[API Response]
+    H -->|200 OK| I[Client]
+    E -->|Error Response| I
+    D -->|Error| J[500 Internal Server Error]
+    J -->|Error Response| I
 ```
+
+This flowchart shows the detailed working of the API:
+
+1. **Client Request**: The client sends an HTTP GET request to `/account/coins`.
+2. **chi Router**: The request is routed through the `chi` router.
+3. **Authorization Middleware**: The middleware checks for valid credentials.
+   - If credentials are valid, the request proceeds to the handler.
+   - If credentials are invalid, a `400 Bad Request` response is returned.
+4. **GetCoinBalance Handler**: The handler processes the request.
+5. **Database Interface**: The handler interacts with the database interface.
+6. **Mock DB**: The mock database retrieves the coin balance for the user.
+7. **API Response**: The handler sends the coin balance in the response.
+   - If successful, a `200 OK` response is returned to the client.
+   - If an error occurs, a `500 Internal Server Error` response is returned.
 
 #### Common Patterns
 
