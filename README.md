@@ -28,8 +28,8 @@ This is a simple Go API service that provides endpoints to get coin balances for
 1. Clone the repository:
 
     ```sh
-    git clone <repository-url>
-    cd <repository-directory>
+    git clone https://github.com/louremipsum/goapi.git
+    cd goapi
     ```
 
 2. Install dependencies:
